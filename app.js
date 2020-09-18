@@ -46,7 +46,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-seedDB();
+//seedDB();
 
 app.listen(process.env.PORT || 3000, function(){
 	console.log("Listening on port 3000"); 
