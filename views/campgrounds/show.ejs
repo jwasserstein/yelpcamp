@@ -1,7 +1,7 @@
 <%- include("../partials/header.ejs") %>
 <div class="container">
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-lg-3">
 			<p class="lead">YelpCamp</p>
 			<div class="list-group">
 				<li class="list-group-item active">Info 1</li>
@@ -9,14 +9,14 @@
 				<li class="list-group-item">Info 3</li>
 			</div>
 		</div>
-		<div class="col-md-9">
-			<div class="thumbnail">
-				<img src="<%= campground.image %>" class="img-responsive">
-				<div class="caption-full">
-					<h4 class="pull-right">$<%= campground.price %>/night</h4>
-					<h4><a><%= campground.name %></a></h4>
-					<p><%= campground.description %></p>
-					<p><em>Posted by: <%= campground.author.username %></em></p>
+		<div class="col-lg-9">
+			<div class="card">
+				<img src="<%= campground.image %>" class="card-img-top">
+				<div class="card-body p-2">
+					<h4 class="float-right">$<%= campground.price %>/night</h4>
+					<h4 class="card-title"><a><%= campground.name %></a></h4>
+					<p class="card-text"><%= campground.description %></p>
+					<p class="card-text"><em>Posted by: <%= campground.author.username %></em></p>
 					<% if(user && user._id.equals(campground.author.id)){ %>
 						<a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
 						<form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="delete">
@@ -25,22 +25,22 @@
 					<% } %>
 				</div>
 			</div>
-			<div class="well">
+			<div class="card bg-light p-4 my-4">
 				<div class="text-right">
 					<a href="/campgrounds/<%= campground._id %>/comments/new" class="btn btn-primary">Add a comment</a>
 				</div>
 				<hr>
 				<% for(let i = 0; i < campground.comments.length; i++){ %>
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col">
 							<strong><%= campground.comments[i].author.username %></strong>
-							<span class="pull-right">
+							<span class="float-right">
 								10 days ago 
 								<% if(user && user._id.equals(campground.comments[i].author.id)) { %>
 									 -
-									<a href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[i]._id %>/edit" class="btn btn-xs btn-warning">Edit</a>
+									<a href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[i]._id %>/edit" class="btn btn-sm btn-warning">Edit</a>
 									<form class="delete" action="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[i]._id %>?_method=DELETE" method="POST">
-										<button class="btn btn-xs btn-danger">Delete</button>
+										<button class="btn btn-sm btn-danger">Delete</button>
 									</form>
 								<% } %>
 							</span>
