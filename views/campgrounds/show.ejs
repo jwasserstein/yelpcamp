@@ -16,7 +16,7 @@
 					<h4 class="float-right">$<%= campground.price %>/night</h4>
 					<h4 class="card-title"><a><%= campground.name %></a></h4>
 					<p class="card-text"><%= campground.description %></p>
-					<p class="card-text"><em>Posted by: <%= campground.author.username %>, <%= moment(campground.createdAt).fromNow() %></em></p>
+					<p class="card-text"><em>Posted by: <a href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>, <%= moment(campground.createdAt).fromNow() %></em></p>
 					<% if(user && (user._id.equals(campground.author.id) || user.isAdmin)){ %>
 						<a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
 						<form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="delete">
@@ -33,7 +33,7 @@
 				<% for(let i = 0; i < campground.comments.length; i++){ %>
 					<div class="row">
 						<div class="col">
-							<strong><%= campground.comments[i].author.username %></strong>
+							<strong><a href="/users/<%= campground.comments[i].author.id %>"><%= campground.comments[i].author.username %></a></strong>
 							<span class="float-right">
 								<%= moment(campground.comments[i].createdAt).fromNow() %> 
 								<% if(user && (user._id.equals(campground.comments[i].author.id) || user.isAdmin)) { %>

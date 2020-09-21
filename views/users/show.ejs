@@ -1,0 +1,33 @@
+<%- include("../partials/header.ejs") %>
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-lg-4">
+			<h1><%= foundUser.username %>'s Profile</h1>
+			<p>Email: <%= foundUser.email %></p>
+			<% if(user && user._id.equals(foundUser._id)) { %>
+				<p class="m-0">First Name: <%= foundUser.firstName %></p>
+				<p>Last Name: <%= foundUser.lastName %></p>
+				<a href="/users/<%= foundUser._id %>/edit" class="btn btn-warning btn-sm">Edit Profile</a>
+				<a href="" class="btn btn-danger btn-sm">Reset Password</a>
+			<% } %>
+		</div>
+		<div class="col-lg-8">
+			<h2>User's Campgrounds</h2>
+			<ul>
+				<% campgrounds.forEach(function(campground){ %>
+					<li><a href="/campgrounds/<%= campground._id %>"><%= campground.name %></a></li>
+				<% }); %>
+			</ul>
+
+			<h2>User's Comments</h2>
+			<ul>
+				<% comments.forEach(function(comment){ %>
+					<li><%= comment.text %></li>
+				<% }); %>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<%- include("../partials/footer.ejs") %>
