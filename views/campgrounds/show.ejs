@@ -16,8 +16,8 @@
 					<h4 class="float-right">$<%= campground.price %>/night</h4>
 					<h4 class="card-title"><a><%= campground.name %></a></h4>
 					<p class="card-text"><%= campground.description %></p>
-					<p class="card-text"><em>Posted by: <%= campground.author.username %></em></p>
 					<% if(user && user._id.equals(campground.author.id)){ %>
+					<p class="card-text"><em>Posted by: <%= campground.author.username %>, <%= moment(campground.createdAt).fromNow() %></em></p>
 						<a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
 						<form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="delete">
 							<button class="btn btn-danger">Delete</button>
@@ -35,8 +35,8 @@
 						<div class="col">
 							<strong><%= campground.comments[i].author.username %></strong>
 							<span class="float-right">
-								10 days ago 
 								<% if(user && user._id.equals(campground.comments[i].author.id)) { %>
+								<%= moment(campground.comments[i].createdAt).fromNow() %> 
 									 -
 									<a href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[i]._id %>/edit" class="btn btn-sm btn-warning">Edit</a>
 									<form class="delete" action="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[i]._id %>?_method=DELETE" method="POST">

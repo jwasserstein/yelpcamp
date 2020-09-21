@@ -42,6 +42,8 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 
 app.set("view engine", "ejs"); 
 
+app.locals.moment = require("moment");
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
