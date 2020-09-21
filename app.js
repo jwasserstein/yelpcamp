@@ -15,7 +15,8 @@ let express          = require("express"),
 
 let indexRoutes      = require("./routes/index"),
 	campgroundRoutes = require("./routes/campgrounds"),
-	commentRoutes    = require("./routes/comments");
+	commentRoutes    = require("./routes/comments"),
+	userRoutes       = require("./routes/users");
 
 mongoose.connect(process.env.DATABASEURL || "mongodb://localhost/yelpcamp", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 app.use(bodyParser.urlencoded({extended: true}));
@@ -37,6 +38,7 @@ app.use(function(req, res, next){
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 app.use(indexRoutes);
+app.use("/users", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
