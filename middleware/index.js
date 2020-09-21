@@ -15,7 +15,7 @@ function doesUserOwnCampground(req, res, next){
 		if(err){
 			res.send("Error finding campground in database: " + err);
 		} else {
-			if(req.user._id.equals(campground.author.id)){
+			if(req.user._id.equals(campground.author.id) || req.user.isAdmin){
 				next();
 			} else {
 				req.flash("error", "You're not authorized to do that");
@@ -30,7 +30,7 @@ function doesUserOwnComment(req, res, next){
 		if(err){
 			res.send("Error finding comment: " + err);
 		} else {
-			if(comment.author.id.equals(req.user._id)){
+			if(comment.author.id.equals(req.user._id) || req.user.isAdmin){
 				next();
 			} else {
 				req.flash("error", "You're not authorized to do that");
