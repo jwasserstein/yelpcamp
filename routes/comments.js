@@ -4,65 +4,65 @@ const express    = require("express"),
 	  Comment    = require("../models/comment"),
 	  middleware = require("../middleware");  //Requiring a directory is the same as requiring the index.js file in that directory
 
-router.get("/new", middleware.isLoggedIn, function(req, res){
-	Campground.findById(req.params.id, function(err, campground){
-		if(err){
-			res.send("Couldn't find campground in database: " + err);
-		} else {
-			res.render("comments/new", {campground: campground});
-		}
-	});
+router.get("/new", middleware.isLoggedIn, async function(req, res){
+	try {
+		const campground = await Campground.findById(req.params.id);
+		res.render("comments/new", {campground: campground});
+	} catch (err) {
+		req.flash("error", "Couldn't find campground in database");
+		res.redirect("/campgrounds/" + req.params.id);
+	}
 });
 
-router.post("/", middleware.isLoggedIn, function(req, res){
-	Campground.findById(req.params.id, function(err, campground){
-		if(err){
-			res.send("Couldn't find campground in database: " + err);
-		} else {
-			Comment.create({
-				text: req.body.text,
-				author: {
-					id: req.user._id,
-					username: req.user.username
-				}
-			}, function(err, comment){
-				campground.comments.push(comment);
-				campground.save();
-				res.redirect("/campgrounds/" + req.params.id);
-			});
-		}
-	});
+router.post("/", middleware.isLoggedIn, async function(req, res){
+	try {
+		let campground = await Campground.findById(req.params.id);
+		const comment = await Comment.create({
+			text: req.body.text,
+			author: {
+				id: req.user._id,
+				username: req.user.username
+			}
+		});
+		campground.comments.push(comment);
+		campground.save();
+		res.redirect("/campgrounds/" + req.params.id);
+	} catch (err) {
+		req.flash("error", "Error adding comment: " + err.message);
+		res.redirect("/campgrounds/");
+	}
 });
 
-router.get("/:commentId/edit", middleware.isLoggedIn, middleware.doesUserOwnComment, function(req, res){
-	Comment.findById(req.params.commentId, function(err, comment){
-		if(err){
-			res.send("Error finding comment: " + err);
-		} else {
-			res.render("comments/edit", {campgroundId: req.params.id, comment: comment});
-		}
-	});
+router.get("/:commentId/edit", middleware.isLoggedIn, middleware.doesUserOwnComment, async function(req, res){
+	try {
+		const comment = await Comment.findById(req.params.commentId);
+		res.render("comments/edit", {campgroundId: req.params.id, comment: comment});
+	} catch (err) {
+		req.flash("error", "Error updating comment");
+		res.redirect("/campground");
+	}
 });
 
-router.put("/:commentId", middleware.isLoggedIn, middleware.doesUserOwnComment, function(req, res){
+router.put("/:commentId", middleware.isLoggedIn, middleware.doesUserOwnComment, async function(req, res){
 	req.body.text = req.sanitize(req.body.text);
-	Comment.findByIdAndUpdate(req.params.commentId, req.body, function(err, comment){
-		if(err){
-			res.send("Error updating comment: " + err);
-		} else {
-			res.redirect("/campgrounds/" + req.params.id);
-		}
-	});
+	
+	try {
+		const comment = await Comment.findByIdAndUpdate(req.params.commentId, req.body);
+		res.redirect("/campgrounds/" + req.params.id);
+	} catch (err) {
+		req.flash("error", "Error updating comment: " + err.message);
+		res.redirect("/campground");
+	}
 });
 
-router.delete("/:commentId", middleware.isLoggedIn, middleware.doesUserOwnComment, function(req, res){
-	Comment.findByIdAndDelete(req.params.commentId, function(err){
-		if(err){
-			res.send("Error deleting comment: " + err);
-		} else {
-			res.redirect("/campgrounds/" + req.params.id);
-		}
-	});
+router.delete("/:commentId", middleware.isLoggedIn, middleware.doesUserOwnComment, async function(req, res){
+	try {
+		await Comment.findByIdAndDelete(req.params.commentId);
+		res.redirect("/campgrounds/" + req.params.id);
+	} catch (err){
+		req.flash("error", "Error deleting comment: " + err.message);
+		res.redirect("/campgrounds");
+	}
 });
 
 module.exports = router;
